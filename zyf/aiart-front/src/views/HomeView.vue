@@ -59,7 +59,6 @@
                 style="width: 200px; height: 250px"
                 :src="photoUrl"
                 :fit="fit"
-                placeholder="待加载"
               >
               </el-image>
             </div>
@@ -113,12 +112,16 @@ export default {
       this.fileList = [];
     },
     handleChange(file, fileList) {
+      // console.log(file)
+      // this.photoUrl = file
       this.fileList = fileList;
       // console.log(this.fileList, "sb");
     },
     //自定义上传文件
     uploadFile(file) {
       this.formData.append("file", file.file);
+      // console.log(file)
+      // this.photoUrl = file
       // console.log(file.file, "sb2");
     },
     //删除文件
@@ -133,26 +136,29 @@ export default {
     onSubmit() {
       this.loading = true;
       let formData = new FormData();
-      formData.append("file", this.fileList[0].raw); //拿到存在fileList的文件存放到formData中
-      //下面数据是我自己设置的数据,可自行添加数据到formData(使用键值对方式存储)
-      formData.append("title", this.title);
+      formData.append("sender", "ZYF"); //发起者
+      formData.append("algorithm", "sketch"); //算法
+      formData.append("store_loc", ""); //临时位置
+      formData.append("file_name", this.fileList[0].raw.name)//文件名
+      formData.append("file", this.fileList[0].raw); //照片
+      // console.log(formData.get("algorithm"))
       this.axios
-        .post(post请求的具体路径, formData, {
-          "Content-Type": "multipart/form-data;charset=utf-8",
-        })
-        .then((res) => {
-          if (res.data === "SUCCESS") {
-            this.$notify({
-              title: "成功",
-              message: "提交成功",
-              type: "success",
-              duration: 1000,
-            });
-            let blob = new Blob([res.data]); // 返回的文件流数据
-            this.sketchUrl = window.URL.createObjectURL(blob); // 将他转化为路径
-          }
-        });
-        this.loading = false;
+      .post(路径, formData, {
+        "Content-Type": "multipart/form-data;charset=utf-8",
+      })
+      .then((res) => {
+        if (res.status == 200) {
+          this.$notify({
+            title: "成功",
+            message: "提交成功",
+            type: "success",
+            duration: 1000,
+          });
+          let blob = new Blob([res.data]); // 返回的文件流数据
+          this.sketchUrl = window.URL.createObjectURL(blob); // 将他转化为路径
+        }
+      });
+      this.loading = false;
     },
   },
 };
