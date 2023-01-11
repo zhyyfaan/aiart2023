@@ -3,6 +3,12 @@
     <!-- <img alt="Vue logo" src="../assets/logo.png">
     <HelloWorld msg="Welcome to Your Vue.js App"/> -->
     <div class="header">
+      <div class="title">
+        <p class="big">Facial Sketch Synthesis</p>
+        <p class="small">
+          Generate a quality and vivid sketch portrait from a given photo
+        </p>
+      </div>
       <img
         src="/imgs/header.png"
         alt=""
@@ -41,38 +47,36 @@
                    @click="delFile">选取文件
           </el-button> -->
         </el-upload>
-        <div class="uploadButton">
-          <el-button type="primary" @click="onSubmit">保存</el-button>
-        </div>
+      </div>
+      <div class="uploadButton">
+        <el-button type="primary" :loading=loading @click="onSubmit">生成素描</el-button>
       </div>
       <div class="generator">
         <div class="photo">
           <div class="demo-image">
             <div class="block">
               <el-image
-                style="width: 250px; height: 200px"
+                style="width: 200px; height: 250px"
                 :src="photoUrl"
+                :fit="fit"
+                placeholder="待加载"
+              >
+              </el-image>
+            </div>
+            <div class="tag" slot="tip">照片</div>
+          </div>
+        </div>
+        <div class="sketch">
+          <div class="demo-image">
+            <div class="block">
+              <el-image
+                style="width: 200px; height: 250px"
+                :src="sketchUrl"
                 :fit="fit"
               ></el-image>
             </div>
-            <div class="tag" slot="tip">
-              照片
-            </div>
           </div>
-        </div>
-        <div class="sketch">         
-            <div class="demo-image">
-              <div class="block">
-                <el-image
-                  style="width: 250px; height: 200px"
-                  :src="sketchUrl"
-                  :fit="fit"
-                ></el-image>
-              </div>
-            </div>
-            <div class="tag" slot="tip">
-              素描
-            </div>
+          <div class="tag" slot="tip">素描</div>
         </div>
       </div>
     </div>
@@ -100,6 +104,7 @@ export default {
       fit: "contain",
       photoUrl: "",
       sketchUrl: "",
+      loading : false,
     };
   },
   methods: {
@@ -126,6 +131,7 @@ export default {
     },
     //保存按钮
     onSubmit() {
+      this.loading = true;
       let formData = new FormData();
       formData.append("file", this.fileList[0].raw); //拿到存在fileList的文件存放到formData中
       //下面数据是我自己设置的数据,可自行添加数据到formData(使用键值对方式存储)
@@ -146,6 +152,7 @@ export default {
             this.sketchUrl = window.URL.createObjectURL(blob); // 将他转化为路径
           }
         });
+        this.loading = false;
     },
   },
 };
@@ -155,9 +162,32 @@ export default {
   // background-color: grey;
   height: 250px;
   width: 100%;
+  .title {
+    position: absolute;
+    text-align: left;
+    left: 220px;
+    top: 90px;
+    p {
+      font-size: 40px;
+      font-family: "Helvetica Neue";
+    }
+    .big {
+      margin-bottom: 20px;
+      font-weight: 800;
+    }
+    .small {
+      font-size: 20px;
+      margin: 0;
+      color: gray;
+    }
+  }
+  img {
+    display: block;
+    margin-left: 60%;
+  }
 }
 .divider {
-  margin-top: 50px;
+  margin: 50px 160px 10px 180px;
 }
 .main {
   // background-color: pink;
@@ -170,12 +200,15 @@ export default {
     float: left;
   }
   .uploadButton {
-    margin-top: 30px;
-    padding-left: 140px;
+    margin-left: 100px;
+    margin-top:149px;
+    // padding-left: 135px;
     float: left;
   }
   .generator {
-    padding-top: 70px;
+    display: inline-block;
+    padding-top: 40px;
+    margin-right:70px;
     .photo {
       display: inline-block;
     }
@@ -183,8 +216,8 @@ export default {
       display: inline-block;
       margin-left: 20px;
     }
-    .tag{
-      margin-top:20px;
+    .tag {
+      margin-top: 20px;
     }
   }
 }
