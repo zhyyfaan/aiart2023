@@ -9,7 +9,7 @@ import (
 func main() {
 	initialization.Init()
 
-	if err := global.GlobalEngine.Run(":8080"); err != nil {
+	if err := global.GlobalEngine.Run(":9172"); err != nil {
 		util.ErrorLogger.Panicf("启动异常, err: %s", err.Error())
 	}
 }

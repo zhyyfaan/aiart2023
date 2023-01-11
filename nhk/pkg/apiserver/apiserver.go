@@ -1,7 +1,9 @@
 package apiserver
 
 import (
+	"encoding/base64"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"os"
 	"os/exec"
@@ -110,6 +112,26 @@ func (m *ApiServerController) Run(ctx *gin.Context) {
 		util.ErrorLogger.Printf("运行超时\n")
 		return
 	} else {
-		ctx.JSON(http.StatusOK, "服务调用成功")
+		imgSource, err := ioutil.ReadFile(filepath.Join(meta.StoreLoc, "source", meta.FileName))
+		if err != nil {
+			util.ErrorLogger.Printf("获取输入图像错误，err:%s\n", err.Error())
+			ctx.JSON(http.StatusInternalServerError, "获取输入图像错误")
+			return
+		}
+		base64Source := base64.StdEncoding.EncodeToString(imgSource)
+
+		imgResult, err := ioutil.ReadFile(filepath.Join(meta.StoreLoc, "result", meta.FileName))
+		if err != nil {
+			util.ErrorLogger.Printf("获取生成图像错误，err:%s\n", err.Error())
+			ctx.JSON(http.StatusInternalServerError, "获取生成图像错误")
+			return
+		}
+		base64Result := base64.StdEncoding.EncodeToString(imgResult)
+
+		ctx.JSON(http.StatusOK, map[string]string{
+			"msg": "服务调用成功",
+			"source_img_base64": base64Source,
+			"result_img_base64": base64Result,
+		})
 	}
 }
