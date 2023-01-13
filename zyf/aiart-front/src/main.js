@@ -12,7 +12,8 @@ import axios from 'axios'
 import VueAxios from 'vue-axios';
 Vue.use(VueAxios, axios)
 
-axios.defaults.baseURL = 'https://www.easy-mock.com/mock/5dc7afee2b69d9223b633cbb/mimall';
+// axios.defaults.baseURL = '124.221.224.196:9172';
+axios.defaults.baseURL = '/api';
 axios.defaults.timeout = 8000;
 
 new Vue({

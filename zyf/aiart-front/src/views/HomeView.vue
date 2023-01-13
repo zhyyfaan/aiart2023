@@ -49,7 +49,7 @@
         </el-upload>
       </div>
       <div class="uploadButton">
-        <el-button type="primary" :loading=loading @click="onSubmit">生成素描</el-button>
+        <el-button type="primary" :loading="loading" @click="onSubmit">生成素描</el-button>
       </div>
       <div class="generator">
         <div class="photo">
@@ -79,8 +79,14 @@
         </div>
       </div>
     </div>
-    <div class="footer"></div>
+
+    <div class="footer">
+      <p>The Website Design and FSS algorithm are supported by the group 'AiArt' from HDU </p>
+      <p>If you want to contact us, please send Email to 2961695289@qq.com</p>
+    </div>
+
   </div>
+  
 </template>
 
 <script>
@@ -103,7 +109,7 @@ export default {
       fit: "contain",
       photoUrl: "",
       sketchUrl: "",
-      loading : false,
+      loading: false,
     };
   },
   methods: {
@@ -135,30 +141,47 @@ export default {
     //保存按钮
     onSubmit() {
       this.loading = true;
+      console.log(this.loading);
       let formData = new FormData();
-      formData.append("sender", "ZYF"); //发起者
-      formData.append("algorithm", "sketch"); //算法
-      formData.append("store_loc", ""); //临时位置
-      formData.append("file_name", this.fileList[0].raw.name)//文件名
-      formData.append("file", this.fileList[0].raw); //照片
+      // formData.append("sender", "ZYF"); //发起者
+      formData.append("algorithm_name", "PGP"); //算法
+      // formData.append("store_loc", ""); //临时位置
+      formData.append("file_name", this.fileList[0].raw.name); //文件名
+      formData.append("image", this.fileList[0].raw); //照片
       // console.log(formData.get("algorithm"))
       this.axios
-      .post(路径, formData, {
-        "Content-Type": "multipart/form-data;charset=utf-8",
-      })
-      .then((res) => {
-        if (res.status == 200) {
-          this.$notify({
-            title: "成功",
-            message: "提交成功",
-            type: "success",
-            duration: 1000,
-          });
-          let blob = new Blob([res.data]); // 返回的文件流数据
-          this.sketchUrl = window.URL.createObjectURL(blob); // 将他转化为路径
-        }
-      });
-      this.loading = false;
+        .post("", formData, {
+          "Content-Type": "multipart/form-data;charset=utf-8",
+          // "responseType": "blob",
+          "responseType": "json",
+        })
+        .then((res) => {
+          if (res.status == 200) {
+            this.$notify({
+              title: "上传成功",
+              message: "正在生成",
+              type: "success",
+              duration: 1200,
+            });
+            console.log("res:", res);
+            // let blob = new Blob([res.data]); // 返回的文件流数据
+            // let photoBlob = blob.slice(0, blob.size/2);//切割，由于两张图片大小相同，因此对半切割
+            // let sketchBlob = blob.slice(blob.size/2,blob.size);
+            // console.log(photoBlob.size);
+            // console.log(sketchBlob.size);
+            // this.photoUrl = window.URL.createObjectURL(photoBlob); // 将他转化为路径
+            // this.sketchUrl = window.URL.createObjectURL(sketchBlob); // 将他转化为路径
+
+            this.photoUrl = "data:image/jpeg;base64,"+res.data.source_img_base64;
+            this.sketchUrl = "data:image/jpeg;base64,"+res.data.result_img_base64;
+
+            console.log("this.photoUrl:", this.photoUrl);
+            console.log("this.sketchUrl:", this.sketchUrl);
+            // this.sketchUrl = "/imgs/header.png";
+          }
+        }).finally(()=>{
+          this.loading = false;
+        })
     },
   },
 };
@@ -197,7 +220,7 @@ export default {
 }
 .main {
   // background-color: pink;
-  height: 500px;
+  height: 360px;
   width: 100%;
   position: relative;
   .uploader {
@@ -207,14 +230,14 @@ export default {
   }
   .uploadButton {
     margin-left: 100px;
-    margin-top:149px;
+    margin-top: 149px;
     // padding-left: 135px;
     float: left;
   }
   .generator {
     display: inline-block;
     padding-top: 40px;
-    margin-right:70px;
+    margin-right: 70px;
     .photo {
       display: inline-block;
     }
@@ -228,8 +251,13 @@ export default {
   }
 }
 .footer {
-  // background-color: grey;
+  background-color: #f5f7fa;
   height: 100px;
   width: 100%;
+  padding-top:18px;
+  p{
+    font-size: 13px;
+    color:#a4b2c7;
+  }
 }
 </style>
