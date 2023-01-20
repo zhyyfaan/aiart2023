@@ -1,0 +1,2 @@
+"use strict";(self["webpackChunkaiart_front"]=self["webpackChunkaiart_front"]||[]).push([[443],{9839:function(t,n,u){u.r(n),u.d(n,{default:function(){return f}});var r=function(){var t=this,n=t._self._c;return n("div",{staticClass:"about"})},a=[],l=u(1001),s={},e=(0,l.Z)(s,r,a,!1,null,null,null),f=e.exports}}]);
+//# sourceMappingURL=about.61f6a4ea.js.map
