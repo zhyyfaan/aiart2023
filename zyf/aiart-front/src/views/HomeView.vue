@@ -10,7 +10,7 @@
         </p>
       </div>
       <img
-        src="/imgs/header.png"
+        src="imgs/header.png"
         alt=""
         style="object-fit: contain; height: 250px"
       />
