@@ -4,8 +4,8 @@
 // })
 module.exports = {
   devServer:{
-    host:'localhost',
-    port:8080,
+    // host:'localhost',
+    // port:8080,
     proxy:{
       '/api':{
         target:'http://124.221.224.196:9172/algorithm/run',
